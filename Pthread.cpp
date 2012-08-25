@@ -46,6 +46,11 @@ void Pthread::pthread_unlock(){
 
 }
 
+void Pthread::join(){
+	if(pthread_join(pthread_id,NULL))
+		perror("Fail to join pthread\n");
+}
+
 void Pthread::start(){
 
 	pthread_create(&pthread_id,&pthread_attr,mystub,this);

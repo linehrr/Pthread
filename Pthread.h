@@ -8,7 +8,7 @@ class Pthread {
 
 	static pthread_mutex_t			pthread_mutex;
 
-	public:
+public:
 	Pthread();	
 	//Starting the pthread
 	void 				start();
@@ -16,16 +16,18 @@ class Pthread {
 	unsigned int 			get_pthread_id();
 	void 				set_daemon_thread(bool);
 	bool 				get_daemon_state();
+	void 				join();
+
 	//@Overwrite func
 	virtual void* 			run(void *);
 	~Pthread();
 		
-	protected:
+protected:
 	static void 			pthread_lock();
 	static void 			pthread_unlock();
 	
 
-	private:
+private:
 	pthread_t 			pthread_id;
 	pthread_attr_t			pthread_attr;
 	

@@ -24,6 +24,10 @@ int main(){
 		cout << ppp[i].get_daemon_state() << endl;
 		ppp[i].start();
 	}
+	for(int i = 0; i < 10; i++){
+		ppp[i].join();
+	}
+	printf("Job Done\n");
 
 	getchar();
 	return 0;
