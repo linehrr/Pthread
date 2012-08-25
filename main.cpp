@@ -3,6 +3,9 @@
 #include <iostream>
 
 using namespace std;
+
+Lock mylock;
+
 class mypthread : public Pthread
 {
 	public:
@@ -10,10 +13,12 @@ class mypthread : public Pthread
 };
 
 void* mypthread::run(void* arg){
-	pthread_lock();
-	for(int i = 0; i < 100; i++)
+	mylock.lock();
+	for(int i = 0; i < 1; i++)
 	printf("I am a pthread...:%d\n",i);
-	pthread_unlock();
+	mylock.wait();
+	mylock.unlock();
+	pthread_exit(0);
 }
 
 
@@ -21,9 +26,16 @@ int main(){
 	mypthread ppp[10];
 	for (int i = 0; i < 10; i++){
 		ppp[i].set_daemon_thread(false);
-		cout << ppp[i].get_daemon_state() << endl;
 		ppp[i].start();
 	}
+	
+	sleep(1);
+	
+	for(int i = 0; i < 10; i++){
+		mylock.notifyall();
+	}
+	
+
 	for(int i = 0; i < 10; i++){
 		ppp[i].join();
 	}

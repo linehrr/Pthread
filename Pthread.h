@@ -6,7 +6,7 @@
 
 class Pthread {
 
-	static pthread_mutex_t			pthread_mutex;
+	
 
 public:
 	Pthread();	
@@ -23,13 +23,30 @@ public:
 	~Pthread();
 		
 protected:
-	static void 			pthread_lock();
-	static void 			pthread_unlock();
 	
 
 private:
 	pthread_t 			pthread_id;
 	pthread_attr_t			pthread_attr;
-	
+
+
+};
+
+//Lock***************************************************
+
+class Lock{
+public:
+	Lock();
+	~Lock();
+	void				lock();
+	void				unlock();
+	void				wait();
+	void				notify();
+	void				notifyall();
+protected:
+
+private:
+	pthread_mutex_t 		pthread_mutex;
+	pthread_cond_t			pthread_cond;
 
 };

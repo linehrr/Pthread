@@ -2,15 +2,12 @@
 
 using namespace std;
 
-pthread_mutex_t Pthread::pthread_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 Pthread::Pthread(){
 	if(pthread_attr_init(&pthread_attr)){
 		perror("Cannot init pthread attr\n");
 	}
-	if(pthread_mutex_init(&Pthread::pthread_mutex,NULL)){
-		perror("Cannot init pthread mutex\n");
-	}
+
 }
 
 void* mystub(void* arg){
@@ -37,19 +34,14 @@ bool Pthread::get_daemon_state(){
 	}
 }
 
-void Pthread::pthread_lock(){
-	pthread_mutex_lock(&(Pthread::pthread_mutex));
-}
 
-void Pthread::pthread_unlock(){
-	pthread_mutex_unlock(&(Pthread::pthread_mutex));
 
-}
 
 void Pthread::join(){
 	if(pthread_join(pthread_id,NULL))
 		perror("Fail to join pthread\n");
 }
+
 
 void Pthread::start(){
 
@@ -58,7 +50,6 @@ void Pthread::start(){
 
 Pthread::~Pthread(){
 	pthread_attr_destroy(&pthread_attr);
-	pthread_mutex_destroy(&pthread_mutex);
 }
 
 void Pthread::destroy(){
@@ -72,4 +63,47 @@ void* Pthread::run(void* arg){
 
 unsigned int Pthread::get_pthread_id(){
 	return (unsigned int)pthread_id;
+}
+
+
+
+//Lock*****************************************
+
+Lock::Lock(){
+
+	if(pthread_mutex_init(&pthread_mutex,NULL)){
+		perror("Cannot init pthread mutex\n");
+	}
+	if(pthread_cond_init(&pthread_cond,NULL)){
+		perror("Cannot init pthread cond\n");
+	}
+}
+
+Lock::~Lock(){
+	pthread_mutex_destroy(&pthread_mutex);
+	pthread_cond_destroy(&pthread_cond);
+}
+
+void Lock::lock(){
+	pthread_mutex_lock(&pthread_mutex);
+}
+
+void Lock::unlock(){
+	pthread_mutex_unlock(&pthread_mutex);
+
+}
+
+void Lock::wait(){
+	if(pthread_cond_wait(&pthread_cond,&pthread_mutex)!=0)
+		perror("pthread wait fail\n");
+}
+
+void Lock::notify(){
+	if(pthread_cond_signal(&pthread_cond)!=0)
+		perror("pthread notify fail\n");
+}
+
+void Lock::notifyall(){
+	if(pthread_cond_broadcast(&pthread_cond)!=0)
+		perror("pthread notifyall fail\n");
 }
