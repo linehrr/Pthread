@@ -67,9 +67,12 @@ unsigned int Pthread::get_pthread_id(){
 
 
 
-//Lock*****************************************
+//*********************************************
+//------------implementation of the lock-------
+//*********************************************
 
 Lock::Lock(){
+	lock_count = 0;
 
 	if(pthread_mutex_init(&pthread_mutex,NULL)){
 		perror("Cannot init pthread mutex\n");
@@ -85,12 +88,27 @@ Lock::~Lock(){
 }
 
 void Lock::lock(){
-	pthread_mutex_lock(&pthread_mutex);
+	if(pthread_mutex_lock(&pthread_mutex)==0){
+		lock_count += 1;
+	}else{
+		perror("pthread lock fail\n");
+	}
 }
 
 void Lock::unlock(){
-	pthread_mutex_unlock(&pthread_mutex);
+	if(pthread_mutex_unlock(&pthread_mutex)==0){
+		lock_count -= 1;
+	}else{
+		perror("pthread unlock fail\n");
+	}
+	if(lock_count < 0){
+		perror("nothing to unlock now\n");
+		lock_count = 0;
+	}
+}
 
+int Lock::get_lock_count(){
+	return lock_count;
 }
 
 void Lock::wait(){

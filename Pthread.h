@@ -43,10 +43,12 @@ public:
 	void				wait();
 	void				notify();
 	void				notifyall();
+	int 				get_lock_count();
 protected:
 
 private:
 	pthread_mutex_t 		pthread_mutex;
 	pthread_cond_t			pthread_cond;
+	int	 			lock_count;
 
 };

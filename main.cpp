@@ -34,7 +34,8 @@ int main(){
 	for(int i = 0; i < 10; i++){
 		mylock.notifyall();
 	}
-	
+	mylock.unlock();
+	printf("Lock count:%d\n",mylock.get_lock_count());
 
 	for(int i = 0; i < 10; i++){
 		ppp[i].join();
