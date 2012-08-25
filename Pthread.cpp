@@ -61,6 +61,8 @@ void Pthread::destroy(){
 void* Pthread::run(void* arg){
 }
 
+
+
 unsigned int Pthread::get_pthread_id(){
 	return (unsigned int)pthread_id;
 }

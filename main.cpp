@@ -17,6 +17,7 @@ void* mypthread::run(void* arg){
 	for(int i = 0; i < 1; i++)
 	printf("I am a pthread...:%d\n",i);
 	mylock.wait();
+	printf("Locks left:%d\n",mylock.get_lock_count());
 	mylock.unlock();
 	pthread_exit(0);
 }
@@ -36,6 +37,7 @@ int main(){
 	}
 	mylock.unlock();
 	printf("Lock count:%d\n",mylock.get_lock_count());
+
 
 	for(int i = 0; i < 10; i++){
 		ppp[i].join();
