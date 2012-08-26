@@ -39,6 +39,7 @@ public:
 	Lock();
 	~Lock();
 	void				lock();
+	void				trylock();
 	void				unlock();
 	void				wait();
 	void				notify();

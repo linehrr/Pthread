@@ -97,6 +97,16 @@ void Lock::lock(){
 	}
 }
 
+void Lock::trylock(){
+	if(pthread_mutex_trylock(&pthread_mutex)==0){
+		lock_count += 1;
+	}else{
+		perror("pthread trylock fail\n");
+	}
+}
+
+
+
 void Lock::unlock(){
 	if(pthread_mutex_unlock(&pthread_mutex)==0){
 		lock_count -= 1;
