@@ -4,7 +4,7 @@ using namespace std;
 
 
 Pthread::Pthread(){
-	if(pthread_attr_init(&pthread_attr)){
+	if(pthread_attr_init(&pthread_attr) && VERBOSE){
 		perror("Cannot init pthread attr\n");
 	}
 
@@ -38,7 +38,7 @@ bool Pthread::get_daemon_state(){
 
 
 void Pthread::join(){
-	if(pthread_join(pthread_id,NULL))
+	if(pthread_join(pthread_id,NULL) && VERBOSE)
 		perror("Fail to join pthread\n");
 }
 
@@ -53,7 +53,7 @@ Pthread::~Pthread(){
 }
 
 void Pthread::destroy(){
-	if(!pthread_cancel(pthread_id)){
+	if(!pthread_cancel(pthread_id) && VERBOSE){
 		perror("Error destroy pthread:"+pthread_id);
 	}
 }
@@ -76,10 +76,10 @@ unsigned int Pthread::get_pthread_id(){
 Lock::Lock(){
 	lock_count = 0;
 
-	if(pthread_mutex_init(&pthread_mutex,NULL)){
+	if(pthread_mutex_init(&pthread_mutex,NULL) && VERBOSE){
 		perror("Cannot init pthread mutex\n");
 	}
-	if(pthread_cond_init(&pthread_cond,NULL)){
+	if(pthread_cond_init(&pthread_cond,NULL) && VERBOSE){
 		perror("Cannot init pthread cond\n");
 	}
 }
@@ -92,7 +92,7 @@ Lock::~Lock(){
 void Lock::lock(){
 	if(pthread_mutex_lock(&pthread_mutex)==0){
 		lock_count += 1;
-	}else{
+	}else if(VERBOSE){
 		perror("pthread lock fail\n");
 	}
 }
@@ -100,7 +100,7 @@ void Lock::lock(){
 void Lock::trylock(){
 	if(pthread_mutex_trylock(&pthread_mutex)==0){
 		lock_count += 1;
-	}else{
+	}else if(VERBOSE){
 		perror("pthread trylock fail\n");
 	}
 }
@@ -110,10 +110,10 @@ void Lock::trylock(){
 void Lock::unlock(){
 	if(pthread_mutex_unlock(&pthread_mutex)==0){
 		lock_count -= 1;
-	}else{
+	}else if(VERBOSE){
 		perror("pthread unlock fail\n");
 	}
-	if(lock_count < 0){
+	if(lock_count < 0 && VERBOSE){
 		perror("nothing to unlock now\n");
 		lock_count = 0;
 	}
@@ -124,16 +124,16 @@ int Lock::get_lock_count(){
 }
 
 void Lock::wait(){
-	if(pthread_cond_wait(&pthread_cond,&pthread_mutex)!=0)
+	if(pthread_cond_wait(&pthread_cond,&pthread_mutex)!=0 && VERBOSE)
 		perror("pthread wait fail\n");
 }
 
 void Lock::notify(){
-	if(pthread_cond_signal(&pthread_cond)!=0)
+	if(pthread_cond_signal(&pthread_cond)!=0 && VERBOSE)
 		perror("pthread notify fail\n");
 }
 
 void Lock::notifyall(){
-	if(pthread_cond_broadcast(&pthread_cond)!=0)
+	if(pthread_cond_broadcast(&pthread_cond)!=0 && VERBOSE)
 		perror("pthread notifyall fail\n");
 }

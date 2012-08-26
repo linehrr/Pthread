@@ -10,16 +10,13 @@ class mypthread : public Pthread
 {
 	public:
 		virtual void* 	run(void*);	
+	private:
+		int iii;
 };
 
 void* mypthread::run(void* arg){
-	mylock.lock();
-	for(int i = 0; i < 1; i++)
-	printf("I am a pthread...:%d\n",i);
-	mylock.wait();
-	printf("Locks left:%d\n",mylock.get_lock_count());
-	mylock.unlock();
-	pthread_exit(0);
+	int iii = 0;
+	printf("thread output: %d\n", ++iii);
 }
 
 

@@ -3,6 +3,7 @@
 #include "stdlib.h"
 #include "stdio.h"
 
+#define VERBOSE 1			//define verbose mode
 
 class Pthread {
 
