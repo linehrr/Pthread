@@ -7,7 +7,6 @@ Pthread::Pthread(){
 	if(pthread_attr_init(&pthread_attr) && VERBOSE){
 		perror("Cannot init pthread attr\n");
 	}
-
 }
 
 void* mystub(void* arg){
