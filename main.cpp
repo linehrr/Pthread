@@ -9,7 +9,8 @@ Lock mylock;
 class mypthread : public Pthread
 {
 	public:
-		virtual void* 	run(void*);	
+		virtual 	void* 	run(void*);
+	 				~mypthread();
 	private:
 		int iii;
 };
@@ -17,6 +18,10 @@ class mypthread : public Pthread
 void* mypthread::run(void* arg){
 	int iii = 0;
 	printf("thread output: %d\n", ++iii);
+}
+
+mypthread::~mypthread(){
+	//TODO GC
 }
 
 

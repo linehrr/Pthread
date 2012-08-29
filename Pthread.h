@@ -18,10 +18,11 @@ public:
 	void 				set_daemon_thread(bool);
 	bool 				get_daemon_state();
 	void 				join();
+					~Pthread();
 
 	//@Overwrite func
 	virtual void* 			run(void *);
-	~Pthread();
+
 		
 protected:
 	
@@ -38,7 +39,7 @@ private:
 class Lock{
 public:
 	Lock();
-	~Lock();
+	virtual 			~Lock();
 	void				lock();
 	void				trylock();
 	void				unlock();
