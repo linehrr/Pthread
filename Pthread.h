@@ -1,24 +1,31 @@
+#pragma once
 #include "pthread.h"
 #include "errno.h"
 #include "stdlib.h"
 #include "stdio.h"
 
+
+
 #define VERBOSE 1			//define verbose mode
+
+class Pthread_pool;
 
 class Pthread {
 
 	
 
 public:
-	Pthread();	
-	//Starting the pthread
-	void 				start();
+	//***********************Pthread Implementation************
+	Pthread();
+	~Pthread();
+	
+	void 				start();//Starting the pthread
 	void 				destroy();
 	unsigned int 			get_pthread_id();
 	void 				set_daemon_thread(bool);
 	bool 				get_daemon_state();
 	void 				join();
-					~Pthread();
+
 
 	//@Overwrite func
 	virtual void* 			run(void *);

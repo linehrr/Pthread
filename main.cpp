@@ -1,4 +1,5 @@
 #include "Pthread.h"
+#include "Pthread_pool.h"
 #include "sys/wait.h"
 #include <iostream>
 
@@ -10,7 +11,7 @@ class mypthread : public Pthread
 {
 	public:
 		virtual 	void* 	run(void*);
-	 				~mypthread();
+		~mypthread();
 	private:
 		int iii;
 };
@@ -27,25 +28,11 @@ mypthread::~mypthread(){
 
 int main(){
 	mypthread ppp[10];
-	for (int i = 0; i < 10; i++){
-		ppp[i].set_daemon_thread(false);
-		ppp[i].start();
-	}
+//	cout << sizeof(ppp)/sizeof(ppp[0]) << endl;
+	Pthread_pool pthread_pool;
+	pthread_pool.add_pthread(ppp);
+
 	
-	sleep(1);
-	
-	for(int i = 0; i < 10; i++){
-		mylock.notifyall();
-	}
-	mylock.unlock();
-	printf("Lock count:%d\n",mylock.get_lock_count());
-
-
-	for(int i = 0; i < 10; i++){
-		ppp[i].join();
-	}
-	printf("Job Done\n");
-
 	getchar();
 	return 0;
 }
