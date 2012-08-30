@@ -1,5 +1,4 @@
 #include "Pthread.h"
-#include "Pthread_pool.h"
 #include "sys/wait.h"
 #include <iostream>
 
@@ -28,9 +27,6 @@ mypthread::~mypthread(){
 
 int main(){
 	mypthread ppp[10];
-//	cout << sizeof(ppp)/sizeof(ppp[0]) << endl;
-	Pthread_pool pthread_pool;
-	pthread_pool.add_pthread(ppp);
 
 	
 	getchar();
