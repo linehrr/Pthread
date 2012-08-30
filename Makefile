@@ -1,4 +1,4 @@
-test : Pthread.o main.o
+test : Pthread.o main.o Pthread.h
 	g++ Pthread.o main.o -o test -lpthread
 
 main.o : main.cpp

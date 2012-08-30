@@ -1,5 +1,6 @@
 #pragma once
 #include "pthread.h"
+#include "semaphore.h"
 #include "errno.h"
 #include "stdlib.h"
 #include "stdio.h"
@@ -46,6 +47,7 @@ private:
 class Lock{
 public:
 	Lock();
+	Lock(int);
 	virtual 			~Lock();
 	void				lock();
 	void				trylock();
@@ -54,11 +56,15 @@ public:
 	void				notify();
 	void				notifyall();
 	int 				get_lock_count();
+	int 				get_sem_count();
 protected:
 
 private:
 	pthread_mutex_t 		pthread_mutex;
+	sem_t				pthread_sem;
 	pthread_cond_t			pthread_cond;
 	int	 			lock_count;
+	int				sem_value;
+	int				type;
 
 };

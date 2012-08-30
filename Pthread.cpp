@@ -73,6 +73,7 @@ unsigned int Pthread::get_pthread_id(){
 //*********************************************
 
 Lock::Lock(){
+	this -> type = 1;
 	lock_count = 0;
 
 	if(pthread_mutex_init(&pthread_mutex,NULL) && VERBOSE){
@@ -83,16 +84,36 @@ Lock::Lock(){
 	}
 }
 
+Lock::Lock(int sem_value){
+	this -> type = 2;
+	this -> sem_value = (sem_value > 0)?sem_value:1;
+
+	if(sem_init(&pthread_sem, 0, this -> sem_value) && VERBOSE){
+		perror("Cannot init pthread semaphore\n");
+	}
+}
+
+
 Lock::~Lock(){
-	pthread_mutex_destroy(&pthread_mutex);
-	pthread_cond_destroy(&pthread_cond);
+	if(this -> type == 1){
+		pthread_mutex_destroy(&pthread_mutex);
+		pthread_cond_destroy(&pthread_cond);
+	}else if(this -> type == 2){
+		sem_destroy(&pthread_sem);
+	}
+
 }
 
 void Lock::lock(){
-	if(pthread_mutex_lock(&pthread_mutex)==0){
+	if(this -> type == 1){
+		if(pthread_mutex_lock(&pthread_mutex)==0){
+			lock_count += 1;
+		}else if(VERBOSE){
+			perror("pthread lock fail\n");
+		}
+	}else if(this -> type == 2){
 		lock_count += 1;
-	}else if(VERBOSE){
-		perror("pthread lock fail\n");
+		sem_wait(&pthread_sem);
 	}
 }
 
@@ -107,19 +128,30 @@ void Lock::trylock(){
 
 
 void Lock::unlock(){
-	if(pthread_mutex_unlock(&pthread_mutex)==0){
+	if(this -> type == 1){
+		if(pthread_mutex_unlock(&pthread_mutex)==0){
+			lock_count -= 1;
+		}else if(VERBOSE){
+			perror("pthread unlock fail\n");
+		}
+		if(lock_count < 0 && VERBOSE){
+			perror("nothing to unlock now\n");
+			lock_count = 0;
+		}
+	}else if(this -> type == 2){
 		lock_count -= 1;
-	}else if(VERBOSE){
-		perror("pthread unlock fail\n");
-	}
-	if(lock_count < 0 && VERBOSE){
-		perror("nothing to unlock now\n");
-		lock_count = 0;
+		sem_post(&pthread_sem);
 	}
 }
 
 int Lock::get_lock_count(){
 	return lock_count;
+}
+
+int Lock::get_sem_count(){
+	int value = 0;
+	sem_getvalue(&pthread_sem, &value);
+	return value;
 }
 
 void Lock::wait(){
